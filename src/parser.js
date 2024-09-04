@@ -34,6 +34,9 @@ class queryParser extends stream.Writable{
 		
 		// Are we currently seeking new delimiter
 		this.seekingDelimiter = false;
+
+		// Does the sql set change delimiter?
+		this.hasDelimiter = queriesString.toLowerCase().includes('delimiter ');
 		
 	}
 	
@@ -80,7 +83,12 @@ class queryParser extends stream.Writable{
 	parseChar(char){
 		this.checkEscapeChar();
 		this.buffer.push(char);
-		this.checkNewDelimiter(char);
+		// this.checkNewDelimiter(char);
+
+		if (this.hasDelimiter) {
+			this.checkNewDelimiter(char);
+		}
+		
 		this.checkQuote(char);
 		return this.checkEndOfQuery();
 	}
